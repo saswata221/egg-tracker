@@ -1,0 +1,111 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Hide scrollbar but keep scrolling */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+ body {
+  min-height: 100vh;
+}
+ html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  background: black; /* same dark base color */
+}
+
+
+@keyframes blob1 {
+  0%   { transform: translate(0px, 0px) scale(1); }
+  50%  { transform: translate(80px, 60px) scale(1.1); }
+  100% { transform: translate(0px, 0px) scale(1); }
+}
+
+@keyframes blob2 {
+  0%   { transform: translate(0px, 0px) scale(1); }
+  50%  { transform: translate(-60px, -80px) scale(1.05); }
+  100% { transform: translate(0px, 0px) scale(1); }
+}
+
+@keyframes blob3 {
+  0%   { transform: translate(0px, 0px); }
+  50%  { transform: translate(40px, -40px); }
+  100% { transform: translate(0px, 0px); }
+}
+
+.animate-blob1 {
+  animation: blob1 18s ease-in-out infinite;
+}
+
+.animate-blob2 {
+  animation: blob2 22s ease-in-out infinite;
+}
+
+.animate-blob3 {
+  animation: blob3 26s ease-in-out infinite;
+}
+
+/* ===== THREAD BASE ===== */
+/* ===== THREAD BASE (50% stronger visibility) ===== */
+.thread {
+  fill: none;
+  stroke: rgba(255, 70, 70, 0.38);   /* was ~0.18 → now ~50% intensity */
+  stroke-width: 1.8;
+  filter: blur(0.4px);
+  opacity: 1;
+}
+
+/* ===== Depth Variation ===== */
+.t1 { animation: move1 6s ease-in-out infinite alternate; }
+.t2 { animation: move2 8s ease-in-out infinite alternate; }
+.t3 { animation: move3 10s ease-in-out infinite alternate; }
+.t4 { animation: move4 8s ease-in-out infinite alternate; opacity: 0.8; }
+.t5 { animation: move2 12s ease-in-out infinite alternate; opacity: 0.7; }
+.t6 { animation: move1 14s ease-in-out infinite alternate; opacity: 0.75; }
+
+/* ===== Highlight Energy Line ===== */
+.highlight {
+  stroke: rgba(255, 90, 90, 0.55);
+  stroke-width: 2.6;
+  filter: blur(1px);
+  animation: moveHighlight 10s ease-in-out infinite alternate; /* faster */
+}
+
+
+/* ===== Animations (Different Motions) ===== */
+@keyframes move1 {
+  0% { transform: translateX(-4%) translateY(1%); }
+  50% { transform: translateX(4%) translateY(-2%); }
+  100% { transform: translateX(-2%) translateY(2%); }
+}
+
+@keyframes move2 {
+  0% { transform: translateX(3%) translateY(-3%); }
+  50% { transform: translateX(-5%) translateY(2%); }
+  100% { transform: translateX(2%) translateY(-1%); }
+}
+
+@keyframes move3 {
+  0% { transform: translateX(-3%) translateY(3%); }
+  50% { transform: translateX(5%) translateY(-3%); }
+  100% { transform: translateX(-2%) translateY(1%); }
+}
+
+@keyframes move4 {
+  0% { transform: translateX(2%) translateY(2%); }
+  50% { transform: translateX(-4%) translateY(-2%); }
+  100% { transform: translateX(1%) translateY(1%); }
+}
+
+@keyframes moveHighlight {
+  0% { transform: translateX(-2%) translateY(0%); }
+  50% { transform: translateX(3%) translateY(-2%); }
+  100% { transform: translateX(-1%) translateY(1%); }
+}
