@@ -10,6 +10,8 @@ const app = express();
 app.use(
   cors({
     origin: "*",
+    methods: ["GET", "POST"],
+    allowedHeaders: ["Content-Type", "x-cheat-code"],
   }),
 );
 app.use(express.json());
