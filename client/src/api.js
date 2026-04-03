@@ -2,7 +2,7 @@ import axios from "axios";
 
 const API = axios.create({
   // baseURL: "http://localhost:5000/api",
-  baseURL: "https://egg-tracker-9oya.onrender.com",
+  baseURL: "https://egg-tracker-9oya.onrender.com/api",
 });
 
 // attach cheat code
