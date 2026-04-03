@@ -1,37 +1,21 @@
 {
-  "pricePerEgg": 8,
+  "pricePerEgg": 5.8,
   "inventory": [
     {
-      "date": "2026-03-16",
-      "bought": 32
+      "date": "2026-04-2",
+      "bought": 30
     }
   ],
   "consumption": {
-    "2026-03-17": {
+    "2026-04-02": {
       "Saswata": 1,
       "Tushar": 0,
-      "Swapnil": 0
-    },
-    "2026-03-22": {
-      "Saswata": 2,
-      "Tushar": 1,
       "Swapnil": 2
     },
-    "2026-03-23": {
-      "Saswata": 1,
-      "Tushar": 3,
-      "Swapnil": 3
-    },
-    "2026-03-25": {
-      "Saswata": 1,
-      "Tushar": 3,
-      "Swapnil": 2,
-      "guest": 1
-    },
     "2026-04-03": {
-      "Saswata": 2,
+      "Saswata": 0,
       "Tushar": 0,
-      "Swapnil": 0
+      "Swapnil": 2
     }
   }
 }
