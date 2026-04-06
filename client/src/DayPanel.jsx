@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import dayjs from "dayjs";
-import { addConsumption, getSummary } from "./api";
+import { addConsumption, adminSetDay, getDayData, getSummary } from "./api";
 import AdminPanel from "./AdminPanel";
 
 // ===== Load Lordicon script once =====
@@ -136,21 +136,45 @@ const StatCard = ({ title, value, iconSrc }) => {
 // ===== DayPanel Component =====
 export default function DayPanel({ selectedDate, role }) {
   const [summary, setSummary] = useState(null);
+  const [dayData, setDayData] = useState(null);
+  const [adminEdit, setAdminEdit] = useState({
+    Saswata: 0,
+    Tushar: 0,
+    Swapnil: 0,
+  });
+  const [adminSaving, setAdminSaving] = useState(false);
 
   const today = dayjs();
   const isToday = selectedDate.isSame(today, "day");
-  const isAdmin = role === "su";
+  const isAdmin = role === "Saswata";
   const isGuest = role === "guest";
-  const canEdit = isAdmin || isToday;
+  const canAdd = !isGuest && (isAdmin || isToday);
 
   const loadSummary = async () => {
     const res = await getSummary();
     setSummary(res.data);
   };
 
+  const loadDay = async () => {
+    const dateStr = selectedDate.format("YYYY-MM-DD");
+    const res = await getDayData(dateStr);
+    setDayData(res.data);
+    if (isAdmin) {
+      setAdminEdit({
+        Saswata: Number(res.data?.Saswata) || 0,
+        Tushar: Number(res.data?.Tushar) || 0,
+        Swapnil: Number(res.data?.Swapnil) || 0,
+      });
+    }
+  };
+
   useEffect(() => {
     loadSummary();
   }, []);
+
+  useEffect(() => {
+    loadDay();
+  }, [selectedDate, role]);
 
   if (!summary) return null;
 
@@ -211,8 +235,75 @@ export default function DayPanel({ selectedDate, role }) {
         </div>
       </div>
 
-      {/* ===== ENTRY BOX ===== */}
-      {canEdit && (
+      {/* ===== ADMIN EDIT SELECTED DAY ===== */}
+      {isAdmin && (
+        <div className="mt-6 p-4 rounded-xl bg-black/5 backdrop-blur-[5px] border border-white/10 shadow-xl">
+          <div className="flex items-center justify-between gap-4">
+            <h3 className="font-bold text-lg text-red-500 font-mono">
+              Edit Day ({selectedDate.format("YYYY-MM-DD")})
+            </h3>
+            <button
+              disabled={adminSaving}
+              onClick={async () => {
+                try {
+                  setAdminSaving(true);
+                  const dateStr = selectedDate.format("YYYY-MM-DD");
+                  await adminSetDay(dateStr, {
+                    Saswata: Number(adminEdit.Saswata) || 0,
+                    Tushar: Number(adminEdit.Tushar) || 0,
+                    Swapnil: Number(adminEdit.Swapnil) || 0,
+                  });
+                  await loadDay();
+                  await loadSummary();
+                } finally {
+                  setAdminSaving(false);
+                }
+              }}
+              className={`px-4 py-2 rounded-lg font-semibold transition-all duration-200
+                ${
+                  adminSaving
+                    ? "bg-gray-600 text-gray-300 cursor-not-allowed"
+                    : "bg-red-600 hover:bg-red-700 text-white shadow-lg hover:shadow-red-700/40"
+                }`}
+            >
+              {adminSaving ? "Saving..." : "Save Changes"}
+            </button>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-3 mt-4">
+            {["Saswata", "Tushar", "Swapnil"].map((u) => (
+              <div
+                key={u}
+                className="rounded-lg bg-white/5 border border-white/10 p-3"
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <span className="font-semibold text-white">{u}</span>
+                  <span className="text-xs text-gray-400">
+                    current: {Number(dayData?.[u]) || 0}
+                  </span>
+                </div>
+                <input
+                  type="number"
+                  min="0"
+                  value={adminEdit[u]}
+                  onChange={(e) =>
+                    setAdminEdit((prev) => ({
+                      ...prev,
+                      [u]: e.target.value,
+                    }))
+                  }
+                  className="w-full p-2 rounded-lg bg-black/40 border border-white/10 
+                             text-white placeholder-gray-400
+                             focus:ring-2 focus:ring-red-500 outline-none transition"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ===== ENTRY BOX (TODAY) ===== */}
+      {canAdd && (
         <EggSelector
           isGuest={isGuest}
           selectedDate={selectedDate}
@@ -220,7 +311,7 @@ export default function DayPanel({ selectedDate, role }) {
         />
       )}
 
-      {!canEdit && (
+      {!canAdd && !isAdmin && (
         <p className="text-gray-500 mt-4">
           Past days locked (only admin can edit)
         </p>

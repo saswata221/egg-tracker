@@ -15,6 +15,8 @@ export default function LoginPopup({ onLogin }) {
       const result = await login(code.trim());
 
       setCheatCode(code.trim());
+      localStorage.setItem("cheatCode", code.trim());
+      localStorage.setItem("loginAt", String(Date.now()));
       localStorage.setItem("role", result.role);
       onLogin(result.role);
     } catch (err) {
